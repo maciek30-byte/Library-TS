@@ -1,4 +1,4 @@
-import Book from "../Book";
+import Book from "../Components/Book";
 interface IBooking {
     getId():string;
     getLoanDate():Date;
@@ -6,8 +6,9 @@ interface IBooking {
     rentedBook: Book;
     penalty:number
 
-    rentBook(chosenBook:Book):void | Book | undefined
-    returnBook(returnedBook:Book):void | string | number
+    calculatePenalty():string
+
+
 
 }
 export default IBooking
