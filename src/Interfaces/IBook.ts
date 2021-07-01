@@ -7,7 +7,7 @@ interface IBook {
   // random photo ?? fetch ???
   description: string;
 
-  setRentedState(): void;
+  setRentedState(flag:BookState): void;
 }
 
 export default IBook;

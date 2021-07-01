@@ -3,6 +3,6 @@ import Booking from "../Components/Booking";
 
 // const listType = Book[] | Booking[]
 export enum BookState  {
-    r = 'rented',
-    a = 'available'
+    rented = 'rented',
+    available= 'available'
 }

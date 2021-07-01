@@ -1,13 +1,18 @@
 import Book from "./Components/Book";
 import Booking from "./Components/Booking";
 import HelpersMethod from "./Helpers/HelpersMethod";
+import Library from "./Components/Library";
+import User from "./Components/User";
 
-const staty = new Book('Stary Czlowiek','H','short description');
-const pociag = new Book('Pociag','Dziewczyna','Long Description')
-staty.setIsRented()
+const maciek = new User(5,'Maciek');
+const tomek = new User(6,'Tomek')
+const wacek = new User(7,'Wacek')
 
 
-console.log('single book', staty)
+
+
+
+
 
 
 
