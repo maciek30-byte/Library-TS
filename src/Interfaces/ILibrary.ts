@@ -2,6 +2,7 @@ import Book from "../Components/Book";
 import Booking from "../Components/Booking";
 //@ToDo Konwencja interfejsow i typow, czy kazda funkcja ma cos zwracac !== void//
 //@ToDo Czy kazda metoda z klasy powinna miec swoj interfejs, na jakim poziomie mozna to zlac??//
+//@ToDo jakis sposob na ustawianie wartosci za pomoca get,set ?????//
 interface ILibrary {
   getAllBookList(): Book[];
   getRentedList(): Book[];

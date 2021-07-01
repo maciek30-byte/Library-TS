@@ -4,8 +4,8 @@ import Booking from "./Booking";
 
 class Library implements ILibrary {
   private allBookList: Book[];
-  private rentedList: Book[];
-  private rentedBooks: Book[];
+  private rentedList: Book[]; //{idksiazki, userID}[]
+  private rentedBooks: Book[]; //{idUser, rentedBook[]}[]
   constructor() {
     this.allBookList = [];
     this.rentedList = [];
@@ -35,9 +35,10 @@ class Library implements ILibrary {
     }
   }
   // posluguje sie klasa booking ???
-  rentBook(book: Book): void {
+  rentBook(book: Book): void { // bookId, userId // obiekt z klasa user id bez koniecznosci tworzenia USER
     const rentedBook: Booking = new Booking().choseBook(book);
     this.addToChosenList(this.rentedList, book);
+    book.setIsRented()
     const bookToRemove: Book | undefined = this.allBookList.find(
       (bookF) => bookF.getId() === book.getId()
     );
@@ -48,14 +49,18 @@ class Library implements ILibrary {
 
     this.deleteFromChosenList(this.allBookList, bookToRemove);
   }
-  returnBook(returnedBook: Book): void {
+  returnBook(returnedBook: Book): string | void { // zrobic po Id
+
     // sprawdzic czy jest na liscie do zwrotu
-    this.addToChosenList(this.allBookList, returnedBook);
+    this.addToChosenList(this.allBookList, returnedBook); // flaga z oznaczeniem wypozyczenia, nie ma informacji o tym czy ona kiedykolwiek byla jak jeste wypozyczona//
     const findBook: Book | undefined = this.rentedBooks.find(
       (bookF) => bookF.getId() === returnedBook.getId()
     );
     if (findBook === undefined)
       throw new Error("something is super turbo wrong");
     this.deleteFromChosenList(this.rentedList, findBook);
+    return new Booking().calculatePenalty();
+
+    // zwrocic informacje o statusie //
   }
 }
