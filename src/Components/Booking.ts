@@ -2,28 +2,26 @@ import IBooking from "../Interfaces/IBooking";
 import Book from "./Book";
 import { v4 as uuidv4 } from "uuid";
 import HelpersMethod from "../Helpers/HelpersMethod";
+import { PenaltyObj } from "../Interfaces/Types";
 
 class Booking implements IBooking {
+  private bookingId: string;
   private loanDate: Date;
   private returnedDate: Date;
   public penalty: number = 0;
-  public bookingId: string;
-
 
   constructor(
-
     public userId: string,
     private bookId: string,
-    public bookTitle: string,
-
+    public bookTitle: string
   ) {
     this.loanDate = new Date();
     this.returnedDate = HelpersMethod.manipulateDays(this.loanDate, 7);
-    this.bookingId =  uuidv4();
+    this.bookingId = uuidv4();
   }
 
-  getId(): string {
-    return this.bookId;
+  getBookingId(): string {
+    return this.bookingId;
   }
 
   getLoanDate(): Date {
@@ -37,11 +35,11 @@ class Booking implements IBooking {
   //   this.rentedBookId = bookId;
   //   return this;
   // }
-  setReturnedDateAndPenalty(){
+  setReturnedDateAndPenalty() {
     this.returnedDate = new Date();
     this.penalty = this.calculatePenalty().penalty;
   }
-  calculatePenalty(): {text:string, penalty: number} {
+  calculatePenalty(): PenaltyObj {
     const totalRentDays: number = HelpersMethod.calculateRentingTime(
       this.loanDate
     );
@@ -50,14 +48,14 @@ class Booking implements IBooking {
       ? (penalty = 0)
       : (penalty = this.penalty * totalRentDays);
 
-    const message = {
-      text:`Thx for return ${
-          penalty === 0 ? "every thing is ok" : `your penalty is ${penalty}`
+    const messageAndPenalty:PenaltyObj = {
+      text: `Thx for return ${
+        penalty === 0 ? "every thing is ok" : `your penalty is ${penalty}`
       }`,
       penalty,
-    }
+    };
 
-    return message;
+    return messageAndPenalty;
   }
 }
 export default Booking;

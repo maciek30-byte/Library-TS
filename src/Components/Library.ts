@@ -1,7 +1,7 @@
 import ILibrary from "../Interfaces/ILibrary";
 import Book from "./Book";
 import Booking from "./Booking";
-import { BookState } from "../Interfaces/Types";
+import HelpersMethod from "../Helpers/HelpersMethod";
 import User from "./User";
 const mockupList = [
   new Book("1", "stary czlowiek", "maciej Opozda", "desc"),
@@ -20,96 +20,70 @@ class Library implements ILibrary {
     this.rentedList = [];
     this.rentedBooksList = [];
   }
-  getAvailableBookList(): Book[] {
+  getAvailableBooksList(): Book[] {
     return this.availableBooksList;
   }
   getRentedList(): Booking[] {
     return this.rentedList;
   }
-  getRentedBooksList(): Book[] {
+  getRentedBooksLists(): Book[] {
     return this.rentedBooksList;
   }
-  // private addToChosenBooksList(chosenBooksList: Book[], ...books: Book[]) {
-  //   // sprawdzic czy ksiazka z takim id jest juz na liscie //
-  //   books.forEach((book) => {
-  //     chosenBooksList.push(book);
-  //   });
-  // }
-  //
-  // deleteFromChosenBooksList(chosenBooksList: Book[], bookId: string) {
-  //   //
-  //   // sprawdzic czy jest na liscie, co zabeezpieczy przed undefined//
-  //   if (chosenBooksList.some((book) => book.getId() === bookId)) {
-  //     chosenBooksList = chosenBooksList.filter(
-  //       (element) => element.getId() !== bookId
-  //     );
-  //   }
-  // }
 
   private transferBetweenLists(
     fromList: Book[],
     toList: Book[],
     bookId: string
   ): void {
-    const transferedBook: any = fromList.find((book) => book.getId() === bookId);
-    // type guard type Book
-    toList.push(transferedBook);
+    const transferredBook: Book | undefined = fromList.find(
+      (book) => book.getId() === bookId
+    );
+    if (transferredBook === undefined) {
+      console.log("book not found");
+      return;
+    } else {
+    }
+    toList.push(transferredBook);
     fromList = fromList.filter((book) => book.getId() !== bookId);
   }
 
-  private addToRentedList(bookId:string,userId:string, bookTitle:string){
-    // zmienic nazwe na mnoznik kary multiplier
-    const bookingOrder:Booking = new Booking(userId,bookId,bookTitle);
+  private addToRentedList(bookId: string, userId: string, bookTitle: string) {
+    const bookingOrder: Booking = new Booking(userId, bookId, bookTitle);
     this.rentedList.push(bookingOrder);
-    //defaultowe parametry na koncu
-
   }
 
-  // posluguje sie klasa booking ???
-  // dodac do parametru Usera ??
-  rentBook(bookId: string = "1", userId: string = "5",bookTitle='on'): void {
-    // bookId, userId // obiekt z klasa user id bez koniecznosci tworzenia USER
+  rentBookForUser(bookId: string, userId: string, bookTitle: string): void {
     this.transferBetweenLists(
       this.availableBooksList,
       this.rentedBooksList,
       bookId
     );
-    this.addToRentedList(bookId,userId,bookTitle );
-
-
-    // const rentedBook: Booking = new Booking().choseBook(book);
-    // this.addToChosenList(this.rentedList, book);
-    // book.setRentedState(BookState.rented);
-    // // dodaje do listy wypozyczen wypozyczenie i Id usera ?
+    this.addToRentedList(bookId, userId, bookTitle);
   }
 
-  private editRentedListOrder(bookingId:string):void{
-    const editedElement = this.rentedList.find((order)=> order.getId()=== bookingId);
-    editedElement?.setReturnedDateAndPenalty(); // type guard//
+  private setReturnDataForOrder(bookingId: string): void {
+    const orderElement = this.rentedList.find(
+      (order) => order.getBookingId() === bookingId
+    );
+    orderElement?.setReturnedDateAndPenalty(); // type guard//
+    //@ToDo Czy w takim przypadku musi byc type guard, czy wystarczy optional chaining z es6
   }
 
-  private showMessage(message:string ='no message'){
-    console.log(message)
-  }
-  returnBook(bookId:string,bookingId:string): void {
-    this.transferBetweenLists(this.rentedBooksList,this.availableBooksList,bookId);
-    this.editRentedListOrder(bookId);
-    const order = this.rentedList.find((order)=> order.getId() === bookingId);
-    this.showMessage(order?.calculatePenalty().text);
-
-    // zrobic po Id
-
-  //   // sprawdzic czy jest na liscie do zwrotu
-  //   this.addToChosenList(this.allBookList, returnedBook); // flaga z oznaczeniem wypozyczenia, nie ma informacji o tym czy ona kiedykolwiek byla jak jeste wypozyczona//
-  //   const findBook: Book | undefined = this.rentedBooks.find(
-  //     (bookF) => bookF.getId() === returnedBook.getId()
-  //   );
-  //   if (findBook === undefined)
-  //     throw new Error("something is super turbo wrong");
-  //   this.deleteFromChosenList(this.rentedList, findBook);
-  //   return new Booking().calculatePenalty();
-  //
-  //   // zwrocic informacje o statusie //
+  returnBook(bookId: string, bookingId: string): void {
+    this.transferBetweenLists(
+      this.rentedBooksList,
+      this.availableBooksList,
+      bookId
+    );
+    this.setReturnDataForOrder(bookId);
+    const order: Booking | undefined = this.rentedList.find(
+      (order) => order.getBookingId() === bookingId
+    );
+    if (order === undefined) {
+      console.log("something went wrong, order is undefined");
+      return;
+    }
+    HelpersMethod.showMessage(order?.calculatePenalty().text);
   }
 }
 export default Library;

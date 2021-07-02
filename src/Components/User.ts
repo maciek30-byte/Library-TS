@@ -1,10 +1,11 @@
 import Book from "./Book";
+import { v4 as uuidv4 } from "uuid";
 class User {
-    rentedUList:Book[]
-    constructor(public id:number, public name:string) {
-        this.rentedUList = []
-    }
+  id: string;
+  constructor(public name: string) {
+    this.id = uuidv4();
+  }
 }
-export default User
+export default User;
 
-//@ToDo zmienic ID NA UUID//
+
