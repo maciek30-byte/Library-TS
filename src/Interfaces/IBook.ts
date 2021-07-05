@@ -1,5 +1,5 @@
 interface IBook {
-  getId(): string;
+  id: string;
   imageUrl: string;
   title: string;
   author: string;

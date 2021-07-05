@@ -12,72 +12,41 @@ const mockupList = [
 ];
 
 class Library implements ILibrary {
-  private availableBooksList: Book[] = mockupList;
-  private rentedList: Booking[];
-  private rentedBooksList: Book[];
+  availableBooksList: Book[] = mockupList;
+  rentedList: Booking[];
+  rentedBooksLists: Book[];
   constructor() {
     this.availableBooksList = [];
     this.rentedList = [];
-    this.rentedBooksList = [];
-  }
-  getAvailableBooksList(): Book[] {
-    return this.availableBooksList;
-  }
-  getRentedList(): Booking[] {
-    return this.rentedList;
-  }
-  getRentedBooksLists(): Book[] {
-    return this.rentedBooksList;
+    this.rentedBooksLists = [];
   }
 
-  private transferBetweenLists(
-    fromList: Book[],
-    toList: Book[],
-    bookId: string
-  ): void {
-    const transferredBook: Book | undefined = fromList.find(
-      (book) => book.getId() === bookId
-    );
-    if (transferredBook === undefined) {
-      console.log("book not found");
-      return;
-    } else {
-    }
-    toList.push(transferredBook);
-    fromList = fromList.filter((book) => book.getId() !== bookId);
-  }
-
-  private addToRentedList(bookId: string, userId: string, bookTitle: string) {
-    const bookingOrder: Booking = new Booking(userId, bookId, bookTitle);
-    this.rentedList.push(bookingOrder);
-  }
-
-  rentBookForUser(bookId: string, userId: string, bookTitle: string): void {
-    this.transferBetweenLists(
+  rentBookForUser(user: User, book: Book): void {
+    HelpersMethod.transferBetweenLists(
       this.availableBooksList,
-      this.rentedBooksList,
-      bookId
+      this.rentedBooksLists,
+      book
     );
-    this.addToRentedList(bookId, userId, bookTitle);
+    HelpersMethod.addToRentedList(book, user, this.rentedList);
   }
 
-  private setReturnDataForOrder(bookingId: string): void {
+  setReturnDataForOrder(booking: Booking): void {
     const orderElement = this.rentedList.find(
-      (order) => order.getBookingId() === bookingId
+      (order) => order.bookingId === booking.bookingId
     );
     orderElement?.setReturnedDateAndPenalty(); // type guard//
     //@ToDo Czy w takim przypadku musi byc type guard, czy wystarczy optional chaining z es6
   }
 
-  returnBook(bookId: string, bookingId: string): void {
-    this.transferBetweenLists(
-      this.rentedBooksList,
+  returnBook(book: Book, booking: Booking): void {
+    HelpersMethod.transferBetweenLists(
+      this.rentedBooksLists,
       this.availableBooksList,
-      bookId
+      book
     );
-    this.setReturnDataForOrder(bookId);
+    this.setReturnDataForOrder(booking);
     const order: Booking | undefined = this.rentedList.find(
-      (order) => order.getBookingId() === bookingId
+      (order) => order.bookingId === booking.bookingId
     );
     if (order === undefined) {
       console.log("something went wrong, order is undefined");

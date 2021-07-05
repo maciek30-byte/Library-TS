@@ -1,24 +1,22 @@
 import { v4 as uuidv4 } from "uuid";
 import IBook from "../Interfaces/IBook";
-import { BookState } from "../Interfaces/Types";
+import Validator from "./Validator";
+
 class Book implements IBook {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
   imageUrl: string = "https://picsum.photos/200/300";
 
-  constructor(
-    private id: string,
-    public title: string,
-    public author: string,
-    public description: string
-  ) {
+  constructor(id: string, title: string, author: string, description: string) {
+    Validator.stringLengthValidate(title, 3);
+    Validator.stringLengthValidate(author, 4);
+    Validator.stringLengthValidate(description, 10);
     this.id = uuidv4();
-  }
-  getId(): string {
-    return this.id;
-  }
-
-  getBookTitle(): string {
-    return this.title;
+    this.title = title;
+    this.author = author;
+    this.description = description;
   }
 }
 export default Book;
-
