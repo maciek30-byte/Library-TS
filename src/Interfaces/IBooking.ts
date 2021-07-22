@@ -1,13 +1,12 @@
-import Book from "../Book";
+import Book from "../Components/Book";
+import { PenaltyObj } from "./Types";
 interface IBooking {
-    getId():string;
-    getLoanDate():Date;
-    getReturnedDate():Date;
-    rentedBook: Book;
-    penalty:number
+  bookingId: string;
+  loanDate: Date;
+  returnedDate: Date;
+  penalty: number;
 
-    rentBook(chosenBook:Book):void | Book | undefined
-    returnBook(returnedBook:Book):void | string | number
-
+  setReturnedDateAndPenalty(): void;
+  calculatePenalty(): PenaltyObj;
 }
-export default IBooking
+export default IBooking;

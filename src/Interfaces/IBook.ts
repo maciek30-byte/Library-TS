@@ -1,11 +1,9 @@
 interface IBook {
-    getId():string
-    title:string,
-    author:string,
-    // random photo ?? fetch ???
-    description:string
-
-
+  id: string;
+  imageUrl: string;
+  title: string;
+  author: string;
+  description: string;
 }
 
-export default IBook
+export default IBook;
